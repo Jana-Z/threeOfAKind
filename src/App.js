@@ -2,13 +2,8 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 import PlayingCard from './Playingcard';
-
-// //              blue        red        green
-// const COLORS = ['#48b0ba', '#ba5d48', '#48ba5f']
-// const SHAPES = ['circle', 'square', 'swoosh']
-// const FILLINGS = ['full', 'none', 'mottled']
-// const AMOUNTS = [1, 2, 3]
 
 const FEATURES = {
 //              blue        red        green
@@ -65,6 +60,7 @@ class App extends React.Component{
     
     this.handleClick = this.handleClick.bind(this);
     this.renderCard = this.renderCard.bind(this);
+    this.checkSet = this.checkSet.bind(this);
 
   }
   
@@ -96,46 +92,49 @@ class App extends React.Component{
   componentDidUpdate() {
     // Check for Set
     if(this.state.clicked.length === 3) {
-      let cards = []
-      for(let i = 0; i < 4; i++){
-          cards.push(this.state.curr_pile[this.state.clicked[i]])
-      }
-      for (const feature in FEATURES) {
-          let valid = false
-          // Not all the same
-          if(cards[0][feature] === cards[1][feature] && cards[1][feature] === cards[2][feature]) {
-              valid = true
-          }
-          // Not all different
-          if(cards[0][feature] !== cards[1][feature] && cards[0][feature] !== cards[2][feature] && cards[1][feature] !== cards[2][feature]){
-              valid = true
-          }
-          if(!valid){
-              console.log(`Failed when checking ${feature}`);
-              console.log(cards[0][feature]);
-              console.log(cards[1][feature]);
-              console.log(cards[2][feature]);
-              return;
-          }
-      }
-
-      console.log('valid set')
-
-      this.setState((state) => {
-        let deck = [...state.curr_deck];
-        let pile = [...state.pile];
-        for(const setCard of this.state.clicked){
-          deck[setCard] = pile.pop();
-        }
-        console.log(deck, pile)
-        return {
-          curr_deck: deck,
-          pile: pile,
-          clicked: [],
-          score: state.score + 1,
-        }
-      });
+      this.checkSet();
     }
+  }
+
+  checkSet() {let cards = []
+    for(let i = 0; i < 4; i++){
+        cards.push(this.state.curr_pile[this.state.clicked[i]])
+    }
+    for (const feature in FEATURES) {
+        let valid = false
+        // Not all the same
+        if(cards[0][feature] === cards[1][feature] && cards[1][feature] === cards[2][feature]) {
+            valid = true
+        }
+        // Not all different
+        if(cards[0][feature] !== cards[1][feature] && cards[0][feature] !== cards[2][feature] && cards[1][feature] !== cards[2][feature]){
+            valid = true
+        }
+        if(!valid){
+            console.log(`Failed when checking ${feature}`);
+            console.log(cards[0][feature]);
+            console.log(cards[1][feature]);
+            console.log(cards[2][feature]);
+            return;
+        }
+    }
+
+    console.log('valid set')
+
+    this.setState((state) => {
+      let deck = [...state.curr_deck];
+      let pile = [...state.pile];
+      for(const setCard of this.state.clicked){
+        deck[setCard] = pile.pop();
+      }
+      console.log(deck, pile)
+      return {
+        curr_deck: deck,
+        pile: pile,
+        clicked: [],
+        score: state.score + 1,
+      }
+    });
   }
   
   renderCard(i) {
@@ -159,54 +158,56 @@ class App extends React.Component{
     render() {
       return (
         <div>
+          <Jumbotron>
+
             <Container>
-              
                 <Row>
-                  <Col>
+                  <Col lg={true}>
                     {this.renderCard(0)}
                   </Col>
-                  <Col>
+                  <Col lg={true}>
                     {this.renderCard(1)}
                   </Col>
-                  <Col>
+                  <Col lg={true}>
                     {this.renderCard(2)}
                   </Col>
-                  <Col>
+                  <Col lg={true}>
                     {this.renderCard(3)}
                   </Col>
                 </Row>
         
                 <Row>
-                  <Col>
+                  <Col lg={true}>
                     {this.renderCard(4)}
                   </Col>
-                  <Col>
+                  <Col lg={true}>
                     {this.renderCard(5)}
                   </Col>
-                  <Col>
+                  <Col lg={true}>
                     {this.renderCard(6)}
                   </Col>
-                  <Col>
+                  <Col lg={true}>
                     {this.renderCard(7)}
                   </Col>
                 </Row>
 
                 <Row>
-                  <Col>
+                  <Col lg={true}>
                     {this.renderCard(8)}
                   </Col>
-                  <Col>
+                  <Col lg={true}>
                     {this.renderCard(9)}
                   </Col>
-                  <Col>
+                  <Col lg={true}>
                     {this.renderCard(10)}
                   </Col>
-                  <Col>
+                  <Col lg={true}>
                     {this.renderCard(11)}
                   </Col>
                 </Row>
+              </Container>
 
-            </Container>
+            </Jumbotron>
 
             <p>Remaining cards: {this.state.pile.length}</p>
             <p>Sets found so far: {this.state.score}</p>
