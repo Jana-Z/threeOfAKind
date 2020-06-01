@@ -1,6 +1,7 @@
 import React from 'react';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col'
+import Col from 'react-bootstrap/Col';
+// import Container from 'react-bootstrap/Container';
 
 // const FEATURES = {
 //     //              blue        red        green
@@ -94,35 +95,35 @@ class PlayingCard extends React.Component{
         // Styling
         let background = this.props.inFocus ? "#c9d3f2" : "white";
         let main_style = {
-            padding: '1em',
             backgroundColor: background,
-            height: '90%',
-            width: '100%',
-            margin: '0.5em',
+            margin: '0.5em',    // needs to be fixed for mobile
             cursor: 'pointer',
-            display: 'flex',
-            justifyContent: 'center',
             borderRadius: '5px',
+            height: '10em',
+            justifyContent: 'center',
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column',
         }
         let shapes = []
         for(let i=0; i<this.props.amount; i++){
             shapes.push([this.props.color, this.props.filling, this.props.shape])
         }
         return (
-            <div style={main_style}
+            <div
+                style={main_style}
                 onClick={this.props.onClick}
                 onMouseEnter={this.props.onMouseEnter}
                 onMouseLeave={this.props.onMouseLeave}>
-                <Col style={{margin: 'auto'}}>
 
-                    {shapes.map((s, i) => {
-                        return (
-                        <Row key={i}>
+                {shapes.map((s, i) => {
+                    return (
+                        <div key={i}>
                             {this.drawOne(...s)}
-                        </Row> )
-                    })}
+                        </div>
+                    )
+                })}
 
-                </Col>
             </div>
         )
     }

@@ -241,34 +241,31 @@ class App extends React.Component{
     
   render() {
     let colStyle = {
-      height: 'auto',
+      alignItems: 'center',
+
     }
-    let rows = [...Array(this.state.curr_deck.length/3).keys()];
-    console.log(rows);
     return (
       <div>
         <Jumbotron>
-          <Container>
-        <Alert variant={this.state.heading.status}>
-          <Alert.Heading>{this.state.heading.message}</Alert.Heading>
-          <p>Remaining cards: {this.state.pile.length} <br />
-            Sets found so far: {this.state.score}</p>
-            <div className="d-flex justify-content-end">
-              <Button onClick={() => this.addCards(3)} variant={`outline-${this.state.heading.status}`}>
-                Get three more cards
-              </Button>
-            </div>
-        </Alert>
+          <Container fluid>
+            <Alert variant={this.state.heading.status}>
+              <Alert.Heading>{this.state.heading.message}</Alert.Heading>
+              <p>Remaining cards: {this.state.pile.length} <br />
+                Sets found so far: {this.state.score}</p>
+                <div className="d-flex justify-content-end">
+                  <Button onClick={() => this.addCards(3)} variant={`outline-${this.state.heading.status}`}>
+                    Get three more cards
+                  </Button>
+                </div>
+            </Alert>
 
-              {rows.map(r => 
-                <Row key={r}>
-                  {this.state.curr_deck.slice(r, r+3).map((card, idx) => 
-                      <Col lg={true} style={colStyle} key={idx+r*3}>
-                        {this.renderCard(idx+r*3)}
-                      </Col>
-                  )}
-                </Row>
-              )}
+              <Row xs={2} md={3} lg={4}>
+                {this.state.curr_deck.map((card, idx) => 
+                    <Col style={colStyle} key={idx}>
+                      {this.renderCard(idx)}
+                    </Col>
+                )}
+              </Row>
     
             </Container>
           </Jumbotron>
