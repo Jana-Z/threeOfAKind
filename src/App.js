@@ -210,6 +210,7 @@ class App extends React.Component{
       let colStyle = {
         height: 'auto',
       }
+      let rows = [...Array(3).keys()];
       return (
         <div>
           <Jumbotron>
@@ -219,50 +220,17 @@ class App extends React.Component{
             <p>Remaining cards: {this.state.pile.length} <br />
               Sets found so far: {this.state.score}</p>
           </Alert>
-                <Row>
-                  <Col lg={true} style={colStyle}>
-                    {this.renderCard(0)}
-                  </Col>
-                  <Col lg={true} style={colStyle}>
-                    {this.renderCard(1)}
-                  </Col>
-                  <Col lg={true} style={colStyle}>
-                    {this.renderCard(2)}
-                  </Col>
-                  <Col lg={true} style={colStyle}>
-                    {this.renderCard(3)}
-                  </Col>
-                </Row>
-        
-                <Row>
-                  <Col lg={true} style={colStyle}>
-                    {this.renderCard(4)}
-                  </Col>
-                  <Col lg={true} style={colStyle}>
-                    {this.renderCard(5)}
-                  </Col>
-                  <Col lg={true} style={colStyle}>
-                    {this.renderCard(6)}
-                  </Col>
-                  <Col lg={true} style={colStyle}>
-                    {this.renderCard(7)}
-                  </Col>
-                </Row>
 
-                <Row>
-                  <Col lg={true} style={colStyle}>
-                    {this.renderCard(8)}
-                  </Col>
-                  <Col lg={true} style={colStyle}>
-                    {this.renderCard(9)}
-                  </Col>
-                  <Col lg={true} style={colStyle}>
-                    {this.renderCard(10)}
-                  </Col>
-                  <Col lg={true} style={colStyle}>
-                    {this.renderCard(11)}
-                  </Col>
-                </Row>
+                {rows.map(r => 
+                  <Row>
+                    {this.state.curr_deck.slice(r, r+4).map((card, idx) => 
+                        <Col lg={true} style={colStyle}>
+                          {this.renderCard(idx+r*4)}
+                        </Col>
+                    )}
+                  </Row>
+                )}
+      
               </Container>
             </Jumbotron>
       </div>
