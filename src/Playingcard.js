@@ -1,15 +1,4 @@
 import React from 'react';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-// import Container from 'react-bootstrap/Container';
-
-// const FEATURES = {
-//     //              blue        red        green
-//         'color': ['#48b0ba', '#ba5d48', '#48ba5f'],
-//         'shape': ['circle', 'square', 'swoosh'],
-//         'filling': ['full', 'none', 'mottled'],
-//         'amount': [1, 2, 3]
-//     }
 
 class PlayingCard extends React.Component{
     constructor(props) {
@@ -96,10 +85,10 @@ class PlayingCard extends React.Component{
         let background = this.props.inFocus ? "#c9d3f2" : "white";
         let main_style = {
             backgroundColor: background,
-            margin: '0.5em',    // needs to be fixed for mobile
+            margin: '0.5em',
             cursor: 'pointer',
-            borderRadius: '5px',
-            height: '10em',
+            borderRadius: '5px',  // round edges
+            height: '10.5em',
             justifyContent: 'center',
             alignItems: 'center',
             display: 'flex',

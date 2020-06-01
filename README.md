@@ -7,9 +7,9 @@
 - [ ] Add Websocket through boardgame.io
 ### before boardgame.io
 - [ ] render cards more nicely
-    - [ ] center symbols
-    - [ ] cards same height
-    - [ ] responsive
+    - [x] center symbols
+    - [x] cards same height
+    - [x] responsive
 - [ ] Add extra features  
     - [x] add mouseover
     - [ ] add timer

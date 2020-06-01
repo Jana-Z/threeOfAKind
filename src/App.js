@@ -2,7 +2,6 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Jumbotron from 'react-bootstrap/Jumbotron';
 import PlayingCard from './Playingcard';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
@@ -165,7 +164,7 @@ class App extends React.Component{
       let deck = [...state.curr_deck];
       let pile = [...state.pile];
       if(deck.length === 12){
-        for(const setCard of this.state.clicked){
+        for(const setCard of state.clicked){
           deck[setCard] = pile.pop();
         }
         return {
@@ -180,9 +179,8 @@ class App extends React.Component{
         }
       }
       else {
-        for(const setCard of this.state.clicked){
-          deck.splice(setCard, 1);
-        }
+        deck = deck.filter((card, idx) => !(state.clicked.includes(idx)))
+        console.log(deck)
         return {
           clicked: [],
           curr_deck: deck,
@@ -245,8 +243,7 @@ class App extends React.Component{
 
     }
     return (
-      <div>
-        <Jumbotron>
+      <div style={{backgroundColor: '#e9ecef', padding: '1em'}}>
           <Container fluid>
             <Alert variant={this.state.heading.status}>
               <Alert.Heading>{this.state.heading.message}</Alert.Heading>
@@ -268,7 +265,6 @@ class App extends React.Component{
               </Row>
     
             </Container>
-          </Jumbotron>
     </div>
   )
   }
