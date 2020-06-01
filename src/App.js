@@ -5,6 +5,7 @@ import Col from 'react-bootstrap/Col';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import PlayingCard from './Playingcard';
 import Alert from 'react-bootstrap/Alert';
+import Button from 'react-bootstrap/Button';
 
 const FEATURES = {
 //             blue        red        green
@@ -59,7 +60,7 @@ class App extends React.Component{
       clicked: [],
       heading: {
         message: 'Find a set',
-        status: 'light'},
+        status: 'secondary'},
     }
     
     this.cardInFocus = this.cardInFocus.bind(this);
@@ -67,6 +68,7 @@ class App extends React.Component{
     this.handleClick = this.handleClick.bind(this);
     this.renderCard = this.renderCard.bind(this);
     this.checkSet = this.checkSet.bind(this);
+    this.addCards = this.addCards.bind(this);
 
   }
   
@@ -108,6 +110,22 @@ class App extends React.Component{
 
   }
 
+  addCards(x) {
+
+  this.setState((state) => {
+      let deck = [...state.curr_deck];
+      let pile = [...state.pile];
+      for(let i = 0; i < x ; i ++){
+        deck.push(pile.pop());
+      }
+      return {
+        curr_deck: deck,
+        pile: pile,
+      }
+    })
+
+  }
+
   componentDidUpdate(prevProps, prevState) {
     // Check for Set
     if(this.state.clicked.length === 3 && this.state.clicked !== prevState.clicked) {
@@ -142,22 +160,38 @@ class App extends React.Component{
         }
     }
 
+    // valid set
     this.setState((state) => {
       let deck = [...state.curr_deck];
       let pile = [...state.pile];
-      for(const setCard of this.state.clicked){
-        deck[setCard] = pile.pop();
-      }
-      console.log(deck, pile)
-      return {
-        curr_deck: deck,
-        pile: pile,
-        clicked: [],
-        score: state.score + 1,
-        heading: {
-          message: 'That was a valid set',
-          status: 'success',
+      if(deck.length === 12){
+        for(const setCard of this.state.clicked){
+          deck[setCard] = pile.pop();
         }
+        return {
+          curr_deck: deck,
+          pile: pile,
+          clicked: [],
+          score: state.score + 1,
+          heading: {
+            message: 'That was a valid set',
+            status: 'success',
+          }
+        }
+      }
+      else {
+        for(const setCard of this.state.clicked){
+          deck.splice(setCard, 1);
+        }
+        return {
+          clicked: [],
+          curr_deck: deck,
+          score: state.score + 1,
+          heading: {
+            message: 'That was a valid set',
+            status: 'success',
+          }
+        };
       }
     });
   }
@@ -189,7 +223,6 @@ class App extends React.Component{
   renderCard(i) {
     
     let curr_card = this.state.curr_deck[i]
-
     return (
       <PlayingCard
         color={curr_card.color}
@@ -204,37 +237,43 @@ class App extends React.Component{
       />
       )
       
-    }
+  }
     
-    render() {
-      let colStyle = {
-        height: 'auto',
-      }
-      let rows = [...Array(3).keys()];
-      return (
-        <div>
-          <Jumbotron>
-            <Container>
-          <Alert variant={this.state.heading.status}>
-            <p>{this.state.heading.message}</p>
-            <p>Remaining cards: {this.state.pile.length} <br />
-              Sets found so far: {this.state.score}</p>
-          </Alert>
+  render() {
+    let colStyle = {
+      height: 'auto',
+    }
+    let rows = [...Array(this.state.curr_deck.length/3).keys()];
+    console.log(rows);
+    return (
+      <div>
+        <Jumbotron>
+          <Container>
+        <Alert variant={this.state.heading.status}>
+          <Alert.Heading>{this.state.heading.message}</Alert.Heading>
+          <p>Remaining cards: {this.state.pile.length} <br />
+            Sets found so far: {this.state.score}</p>
+            <div className="d-flex justify-content-end">
+              <Button onClick={() => this.addCards(3)} variant={`outline-${this.state.heading.status}`}>
+                Get three more cards
+              </Button>
+            </div>
+        </Alert>
 
-                {rows.map(r => 
-                  <Row>
-                    {this.state.curr_deck.slice(r, r+4).map((card, idx) => 
-                        <Col lg={true} style={colStyle}>
-                          {this.renderCard(idx+r*4)}
-                        </Col>
-                    )}
-                  </Row>
-                )}
-      
-              </Container>
-            </Jumbotron>
-      </div>
-    )
+              {rows.map(r => 
+                <Row key={r}>
+                  {this.state.curr_deck.slice(r, r+3).map((card, idx) => 
+                      <Col lg={true} style={colStyle} key={idx+r*3}>
+                        {this.renderCard(idx+r*3)}
+                      </Col>
+                  )}
+                </Row>
+              )}
+    
+            </Container>
+          </Jumbotron>
+    </div>
+  )
   }
 }
 
