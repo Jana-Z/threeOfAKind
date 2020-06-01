@@ -13,7 +13,6 @@ import Col from 'react-bootstrap/Col'
 class PlayingCard extends React.Component{
     constructor(props) {
       super(props);
-
       this.drawOne = this.drawOne.bind(this);
     }
 
@@ -93,7 +92,7 @@ class PlayingCard extends React.Component{
 
     render() {
         // Styling
-        let background = this.props.clicked ? "#c9d3f2" : "white";
+        let background = this.props.inFocus ? "#c9d3f2" : "white";
         let main_style = {
             padding: '1em',
             backgroundColor: background,
@@ -111,15 +110,14 @@ class PlayingCard extends React.Component{
         }
         return (
             <div style={main_style}
-                onClick={this.props.onClick}>
-                <Col
-                    style={{
-                        margin: 'auto'
-                    }}>
+                onClick={this.props.onClick}
+                onMouseEnter={this.props.onMouseEnter}
+                onMouseLeave={this.props.onMouseLeave}>
+                <Col style={{margin: 'auto'}}>
 
-                    {shapes.map(s => {
+                    {shapes.map((s, i) => {
                         return (
-                        <Row>
+                        <Row key={i}>
                             {this.drawOne(...s)}
                         </Row> )
                     })}

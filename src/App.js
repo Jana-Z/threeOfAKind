@@ -4,9 +4,10 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import PlayingCard from './Playingcard';
+import Alert from 'react-bootstrap/Alert';
 
 const FEATURES = {
-//              blue        red        green
+//             blue        red        green
     'color': ['#48b0ba', '#ba5d48', '#48ba5f'],
     'shape': ['circle', 'square', 'swoosh'],
     'filling': ['full', 'none', 'mottled'],
@@ -30,7 +31,7 @@ class App extends React.Component{
               'shape': shape,
               'filling': filling,
               'amount': amount,
-              'clicked': false
+              'inFocus': false
             });
           }
         }
@@ -56,8 +57,13 @@ class App extends React.Component{
       curr_deck: curr_deck,
       score: 0,
       clicked: [],
+      heading: {
+        message: 'Find a set',
+        status: 'light'},
     }
     
+    this.cardInFocus = this.cardInFocus.bind(this);
+    this.cardLostFocus = this.cardLostFocus.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.renderCard = this.renderCard.bind(this);
     this.checkSet = this.checkSet.bind(this);
@@ -68,37 +74,52 @@ class App extends React.Component{
     
     this.setState((state) => {
         let deck = [...this.state.curr_deck]
-        if(!(state.clicked.includes(idx)) && state.clicked.length<3){
+        if (state.clicked.length === 3) {
+          for (const card of deck) {
+            card.inFocus = false;
+          }
+          deck[idx].inFocus = true;
+          return {
+            clicked: [idx],
+            curr_deck: deck, 
+          };
+        }
+        else if(!(state.clicked.includes(idx)) && state.clicked.length < 3){
             let clicked = [...state.clicked, idx]
-            deck[idx].clicked = true
-            return { clicked: clicked,
-                curr_pile: deck,
-                pile: state.pile};
+            deck[idx].inFocus = true
+            return {
+              clicked: clicked,
+              curr_deck: deck
+            };
         }
         else {
-            deck[idx].clicked = false
+            deck[idx].inFocus = false
             let clicked = [...state.clicked]
             let index = clicked.indexOf(idx)
             if (index!== -1){
                 clicked.splice(index, 1)
             }
-            return { clicked: clicked,
-                curr_pile: deck};
+            return {
+              clicked: clicked,
+              curr_deck: deck
+            };
         }
     });
 
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     // Check for Set
-    if(this.state.clicked.length === 3) {
+    if(this.state.clicked.length === 3 && this.state.clicked !== prevState.clicked) {
       this.checkSet();
     }
   }
 
-  checkSet() {let cards = []
+  checkSet() {
+    
+    let cards = []
     for(let i = 0; i < 4; i++){
-        cards.push(this.state.curr_pile[this.state.clicked[i]])
+        cards.push(this.state.curr_deck[this.state.clicked[i]])
     }
     for (const feature in FEATURES) {
         let valid = false
@@ -111,15 +132,15 @@ class App extends React.Component{
             valid = true
         }
         if(!valid){
-            console.log(`Failed when checking ${feature}`);
-            console.log(cards[0][feature]);
-            console.log(cards[1][feature]);
-            console.log(cards[2][feature]);
+            this.setState({
+                heading: {
+                  message: `Failed when checking the ${feature}`,
+                  status: 'danger',
+                }
+              });
             return;
         }
     }
-
-    console.log('valid set')
 
     this.setState((state) => {
       let deck = [...state.curr_deck];
@@ -133,8 +154,36 @@ class App extends React.Component{
         pile: pile,
         clicked: [],
         score: state.score + 1,
+        heading: {
+          message: 'That was a valid set',
+          status: 'success',
+        }
       }
     });
+  }
+
+  cardInFocus(idx) {
+
+    this.setState((state) => {
+      let deck = [...state.curr_deck];
+      deck[idx].inFocus = true;
+      return {
+        curr_deck: deck,
+      };
+    });
+
+  }
+
+  cardLostFocus(idx) {
+
+  this.setState((state) => {
+    let deck = [...state.curr_deck];
+    deck[idx].inFocus = state.clicked.indexOf(idx) !== -1  ? true : false;
+    return {
+      curr_deck: deck,
+    };
+  });
+
   }
   
   renderCard(i) {
@@ -147,70 +196,75 @@ class App extends React.Component{
         amount={curr_card.amount}
         filling={curr_card.filling}
         shape={curr_card.shape}
-        clicked={curr_card.clicked}
+        inFocus={curr_card.inFocus}
         key={i}
         onClick={() => this.handleClick(i)}
+        onMouseEnter={() => this.cardInFocus(i)}
+        onMouseLeave={() => this.cardLostFocus(i)}
       />
       )
       
     }
     
     render() {
+      let colStyle = {
+        height: 'auto',
+      }
       return (
         <div>
           <Jumbotron>
-
             <Container>
+          <Alert variant={this.state.heading.status}>
+            <p>{this.state.heading.message}</p>
+            <p>Remaining cards: {this.state.pile.length} <br />
+              Sets found so far: {this.state.score}</p>
+          </Alert>
                 <Row>
-                  <Col lg={true}>
+                  <Col lg={true} style={colStyle}>
                     {this.renderCard(0)}
                   </Col>
-                  <Col lg={true}>
+                  <Col lg={true} style={colStyle}>
                     {this.renderCard(1)}
                   </Col>
-                  <Col lg={true}>
+                  <Col lg={true} style={colStyle}>
                     {this.renderCard(2)}
                   </Col>
-                  <Col lg={true}>
+                  <Col lg={true} style={colStyle}>
                     {this.renderCard(3)}
                   </Col>
                 </Row>
         
                 <Row>
-                  <Col lg={true}>
+                  <Col lg={true} style={colStyle}>
                     {this.renderCard(4)}
                   </Col>
-                  <Col lg={true}>
+                  <Col lg={true} style={colStyle}>
                     {this.renderCard(5)}
                   </Col>
-                  <Col lg={true}>
+                  <Col lg={true} style={colStyle}>
                     {this.renderCard(6)}
                   </Col>
-                  <Col lg={true}>
+                  <Col lg={true} style={colStyle}>
                     {this.renderCard(7)}
                   </Col>
                 </Row>
 
                 <Row>
-                  <Col lg={true}>
+                  <Col lg={true} style={colStyle}>
                     {this.renderCard(8)}
                   </Col>
-                  <Col lg={true}>
+                  <Col lg={true} style={colStyle}>
                     {this.renderCard(9)}
                   </Col>
-                  <Col lg={true}>
+                  <Col lg={true} style={colStyle}>
                     {this.renderCard(10)}
                   </Col>
-                  <Col lg={true}>
+                  <Col lg={true} style={colStyle}>
                     {this.renderCard(11)}
                   </Col>
                 </Row>
               </Container>
-
             </Jumbotron>
-
-            <p>Remaining cards: {this.state.pile.length}</p>
-            <p>Sets found so far: {this.state.score}</p>
       </div>
     )
   }
