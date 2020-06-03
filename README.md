@@ -1,5 +1,13 @@
-# An implementation of SET
+# An implementation of Three of A Kind
 Play set online
+
+## Rules
+Each card has three attributes:
+- amount of symbols
+- filling
+- shape
+- color
+You have to find three cards, so that for all features: all three cards have the same feature or all three cards have different features.
 
 ## Setup
 Clone repo and run `npm install` to get all relevant dependencies.  

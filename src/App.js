@@ -74,7 +74,7 @@ class App extends React.Component{
   handleClick(idx) {
     
     this.setState((state) => {
-        let deck = [...this.state.curr_deck]
+        let deck = [...state.curr_deck]
         if (state.clicked.length === 3) {
           for (const card of deck) {
             card.inFocus = false;
@@ -180,7 +180,6 @@ class App extends React.Component{
       }
       else {
         deck = deck.filter((card, idx) => !(state.clicked.includes(idx)))
-        console.log(deck)
         return {
           clicked: [],
           curr_deck: deck,
