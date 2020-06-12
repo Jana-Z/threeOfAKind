@@ -1,12 +1,13 @@
 # An implementation of Three of A Kind
-Play set online
+Play set online.  
+Check out the networked version [here](https://serene-plains-33592.herokuapp.com/) ([frontend](https://github.com/Jana-Z/three-of-a-kind-frontend) and [backend](https://github.com/Jana-Z/three-of-a-kind-backend))
 
 ## Rules
 Each card has three attributes:
 - amount of symbols
 - filling
 - shape
-- color
+- color  
 You have to find three cards, so that for all features: all three cards have the same feature or all three cards have different features.
 
 ## Setup
